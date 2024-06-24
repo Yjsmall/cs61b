@@ -145,29 +145,6 @@ public class Model {
         return false;
     }
 
-    private boolean bfsMoveExists() {
-        int size = board.size();
-        final int[] DIRS = {0, 1, 0, -1, 0};
-
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                for (int d = 0; d < 4; d++) {
-                    int nx = i + DIRS[d];
-                    int ny = j + DIRS[d + 1];
-
-                    if (nx >= 0 && nx < size && ny >= 0 && ny < size) {
-                        if (board.tile(nx, ny).value() == board.tile(i, j).value()) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-
-
-        return false;
-    }
-
     /**
      * Returns true if there are any valid moves on the board.
      * There are two ways that there can be valid moves:
@@ -180,7 +157,23 @@ public class Model {
         } else if (maxTileExists()) {
             return true;
         }
-        return bfsMoveExists();
+        int i , j;
+        for(i = 0 ; i < board.size() ; i++ ){
+            for(j = 0; j < board.size()-1 ; j++ ){
+                if(board.tile(i,j).value() == board.tile(i,j+1).value()){
+                    return true ;
+                }
+            }
+        }
+
+        for(i = 0 ; i < board.size()-1 ; i++ ){
+            for(j = 0; j < board.size() ; j++ ){
+                if(board.tile(i,j).value() == board.tile(i+1,j).value()){
+                    return true ;
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -199,8 +192,11 @@ public class Model {
      */
     public void moveTileUpAsFarAsPossible(int x, int y) {
         Tile currTile = board.tile(x, y);
+        System.out.println("x" + x + "y" + y);
+        System.out.println(currTile.value());
         int myValue = currTile.value();
         int targetY = y;
+        board.move(0, 0, currTile);
 
         // TODO: Tasks 5, 6, and 10. Fill in this function.
     }
