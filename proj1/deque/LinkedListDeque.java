@@ -3,7 +3,7 @@ package deque;
 public class LinkedListDeque<T> {
     private class Node {
         private Node prev;
-        private T data;
+        private final T data;
         private Node next;
 
         public Node(T data) {
@@ -13,7 +13,7 @@ public class LinkedListDeque<T> {
         }
     }
 
-    private Node sentinel;
+    private final Node sentinel;
     private int size;
 
     public LinkedListDeque() {
@@ -29,6 +29,7 @@ public class LinkedListDeque<T> {
         }
         node.next = sentinel.next;
         node.prev = sentinel;
+        sentinel.next.prev = node;
         sentinel.next = node;
 
         size++;
@@ -39,9 +40,38 @@ public class LinkedListDeque<T> {
         if (size == 0) {
             sentinel.next = node;
         }
-        node.next = sentinel.next;
-        node.prev = sentinel;
+        node.next = sentinel;
+        node.prev = sentinel.prev;
+        sentinel.prev.next = node;
         sentinel.prev = node;
+
+        size++;
+    }
+
+    public T removeFirst() {
+        if (size == 0) {
+            return null;
+        }
+
+        var node = sentinel.next;
+        sentinel.next = node.next;
+        node.next.prev = sentinel;
+
+        size--;
+        return node.data;
+    }
+
+    public T removeLast() {
+        if (size == 0) {
+            return null;
+        }
+
+        var node = sentinel.prev;
+        sentinel.prev = node.prev;
+        node.prev.next = sentinel;
+
+        size--;
+        return node.data;
     }
 
     public boolean isEmpty() {
@@ -61,7 +91,7 @@ public class LinkedListDeque<T> {
     }
 
     public static void main(String[] args) {
-        LinkedListDeque<String> lld1 = new LinkedListDeque<String>();
+        LinkedListDeque<String> lld1 = new LinkedListDeque<>();
         lld1.addFirst("hi");
         lld1.addFirst("hi2");
         lld1.printDeque();
