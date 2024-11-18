@@ -1,6 +1,6 @@
 package deque;
 
-public class LinkedListDeque<T> {
+public class LinkedListDeque<T> implements Deque<T> {
     private class Node {
         private Node prev;
         private final T data;
@@ -72,6 +72,44 @@ public class LinkedListDeque<T> {
 
         size--;
         return node.data;
+    }
+
+    /**
+     * Get the item by index.
+     *
+     * @param index
+     * @return item
+     */
+    @Override
+    public T get(int index) {
+        if (index >= size || isEmpty()) {
+            return null;
+        }
+        var node = sentinel.next;
+
+        for (int i = 0; i < index; i++) {
+            node = node.next;
+        }
+
+        return node.data;
+    }
+
+    public T getRecursive(int index) {
+        if (isEmpty()) {
+            return null;
+        }
+
+        var node = getRecursive(sentinel.next, index);
+
+        return node.data;
+    }
+
+    private Node getRecursive(Node cur, int index) {
+        if (index == 0) {
+            return cur;
+        } else {
+            return getRecursive(cur.next, index - 1);
+        }
     }
 
     public boolean isEmpty() {
